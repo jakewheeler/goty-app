@@ -6,11 +6,17 @@ const { Option } = Select;
 
 const YearPicker = () => {
   const {
-    yearState: [, setCurrentYear]
+    yearState: [, setCurrentYear],
+    gameListState: [games]
   } = useGameListState();
 
   function handleChange(value) {
     setCurrentYear(value);
+  }
+
+  function isGamelistEmpty(list) {
+    if (list.length <= 0) return true;
+    return false;
   }
 
   const years = (() => {

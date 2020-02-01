@@ -72,6 +72,7 @@ const GamesList = ({ user }) => {
 
         setGames([...games]);
         setIsLoading(false);
+        setDisableBtn(true);
       } catch (err) {
         console.error(err);
       }
@@ -79,7 +80,7 @@ const GamesList = ({ user }) => {
     if (token) {
       getGames();
     }
-  }, [saveKey, setGames, setIsLoading, token]);
+  }, [saveKey, setGames, setIsLoading, setDisableBtn, token]);
 
   useEffect(() => {
     setDisableBtn(false); // enable on change
@@ -111,7 +112,7 @@ const GamesList = ({ user }) => {
       />
     );
   };
-  if (games.length <= 0) {
+  if (games.length <= 0 && disableBtn) {
     return (
       <div className='empty-list'>
         <h2>
