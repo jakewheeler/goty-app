@@ -1,0 +1,21 @@
+.search-container {
+  width: 100%;
+
+  .search-bar {
+    margin-left: 2rem;
+  }
+
+  .search-results {
+    max-height: 100vh;
+    position: fixed;
+    overflow-y: auto;
+    background-color: $header-background-color;
+    padding-right: 2rem;
+    z-index: 2;
+
+    ul {
+      list-style: none;
+      padding-bottom: 600px;
+    }
+  }
+}

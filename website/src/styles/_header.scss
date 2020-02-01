@@ -1,0 +1,44 @@
+header {
+  background-color: $header-background-color;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  color: white;
+  padding: 0.5rem;
+
+  h1 {
+    color: white;
+  }
+
+  .site-info {
+    font-size: calc(10px + 2vmin);
+    margin-left: 1.5rem;
+  }
+
+  .user-data-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    margin-top: 1rem;
+
+    .left-side {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+      margin-top: 1.2rem;
+    }
+
+    .right-side {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-end;
+
+      .user-data-items {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+  }
+}
