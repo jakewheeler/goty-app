@@ -205,7 +205,7 @@ const Game = ({ id, gameObj, index, moveGame }) => {
       ref={ref}
       style={{
         opacity,
-        borderStyle: 'solid',
+        borderStyle: 'dashed',
         padding: '20px'
       }}
     >
