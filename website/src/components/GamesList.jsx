@@ -13,6 +13,7 @@ import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { useState } from 'react';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
+import { Link } from 'react-router-dom';
 
 const typeMap = {
   GAME: 'game'
@@ -210,7 +211,9 @@ const Game = ({ id, gameObj, index, moveGame }) => {
       }}
     >
       <div className='game-container'>
-        <div className='game-info'>{gameObj.name}</div>
+        <div className='game-info'>
+          <Link to={`/game/${gameObj.id}`}>{gameObj.name}</Link>
+        </div>
         <div className='remove-btn'>
           <GameCardButton game={gameObj} />
         </div>

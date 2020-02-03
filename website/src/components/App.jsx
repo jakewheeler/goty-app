@@ -4,10 +4,12 @@ import Header from './Header';
 import HomePage from './HomePage';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { GameListProvider } from '../contexts/GamesListContext';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { NoMatch } from '../pages/NoMatchPage';
 
 // styling
 import '../styles/main.scss';
+import { GameDetailPage } from '../pages/GameDetailPage';
 
 const App = () => {
   return (
@@ -19,8 +21,13 @@ const App = () => {
               <Header />
               <UserContent />
             </Route>
-            <Route path='/game/:id'>
-              <div>nice game here</div>
+            <Route path='/game/:gameId'>
+              <FirebaseAuthConsumer>
+                {({ user }) => <GameDetailPage user={user} />}
+              </FirebaseAuthConsumer>
+            </Route>
+            <Route>
+              <NoMatch />
             </Route>
           </Switch>
         </GameListProvider>

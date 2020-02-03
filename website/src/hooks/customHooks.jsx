@@ -22,12 +22,28 @@ export const useFetch = url => {
 
 export const useFetchToken = () => {
   const [token, setToken] = useState(null);
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    async function fetchUser() {
+      const fbUser = await firebase.auth().currentUser;
+      setUser(fbUser);
+    }
+    fetchUser();
+  }, [setUser]);
+
   useEffect(() => {
     async function getToken() {
-      setToken(await firebase.auth().currentUser.getIdToken(true));
+      try {
+        if (!user) return;
+        let userToken = await user.getIdToken(true);
+        setToken(userToken);
+      } catch (err) {
+        console.error(err);
+      }
     }
     getToken();
-  }, [setToken]);
+  }, [setToken, user]);
 
   return token;
 };
