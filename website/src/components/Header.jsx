@@ -4,6 +4,7 @@ import YearPicker from './YearPicker';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import Login from './Login';
 import Logout from './Logout';
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   return (
@@ -11,7 +12,9 @@ const Header = () => {
       {({ isSignedIn, user }) => (
         <header>
           <div className='site-info'>
-            <h1>My_GOTY</h1>
+            <Link to='/'>
+              <h1>My_GOTY</h1>
+            </Link>
           </div>
           {isSignedIn ? (
             <AuthHeaderContent user={user} />
