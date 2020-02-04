@@ -5,6 +5,7 @@ import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useState, useEffect } from 'react';
 import { Spin } from 'antd';
+import { PlainHeader } from '../components/Header';
 
 export const GameDetailPage = user => {
   const { gameId } = useParams();
@@ -33,9 +34,10 @@ export const GameDetailPage = user => {
   }, [gameId, setGame, token]);
 
   return (
-    <div id='gamePage'>
+    <div id='game-page'>
+      <PlainHeader />
       {isLoading ? (
-        <Spin />
+        <Spin size='large' />
       ) : (
         <>
           <Header gameTitle={game?.name} />

@@ -1,0 +1,11 @@
+.no-match {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .no-match-contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+}

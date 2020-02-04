@@ -10,18 +10,13 @@ const Header = () => {
   return (
     <FirebaseAuthConsumer>
       {({ isSignedIn, user }) => (
-        <header>
-          <div className='site-info'>
-            <Link to='/'>
-              <h1>My_GOTY</h1>
-            </Link>
-          </div>
+        <PlainHeader>
           {isSignedIn ? (
             <AuthHeaderContent user={user} />
           ) : (
             <UnauthHeaderContent />
           )}
-        </header>
+        </PlainHeader>
       )}
     </FirebaseAuthConsumer>
   );
@@ -55,6 +50,19 @@ const UnauthHeaderContent = () => {
         </div>
       </div>
     </div>
+  );
+};
+
+export const PlainHeader = ({ children }) => {
+  return (
+    <header>
+      <div className='site-info'>
+        <Link to='/'>
+          <h1>My_GOTY</h1>
+        </Link>
+      </div>
+      {children}
+    </header>
   );
 };
 
