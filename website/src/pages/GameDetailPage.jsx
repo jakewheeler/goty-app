@@ -6,6 +6,7 @@ import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import { PlainHeader } from '../components/Header';
+import { useGameListState } from '../contexts/GamesListContext';
 
 export const GameDetailPage = user => {
   const { gameId } = useParams();
@@ -41,7 +42,7 @@ export const GameDetailPage = user => {
       ) : (
         <>
           <Header gameTitle={game?.name} />
-          <div>game id = {gameId}</div>
+          <GameInformation game={game} />
         </>
       )}
     </div>
@@ -50,9 +51,13 @@ export const GameDetailPage = user => {
 
 const Header = ({ gameTitle }) => {
   const history = useHistory();
+  const {
+    yearState: [, setCurrentYear]
+  } = useGameListState();
 
   function goBack() {
     history.push('/');
+    setCurrentYear(new Date().getFullYear().toString());
   }
   return (
     <PageHeader
@@ -71,4 +76,35 @@ const fetchGameInfo = async (id, token) => {
   return game.data.results[0];
 };
 
-const GameInformation = gameId => {};
+const GameInformation = ({ game }) => {
+  const [data, setData] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setIsLoading(true);
+    setData(game);
+    setIsLoading(false);
+  }, [game, setIsLoading]);
+
+  return (
+    <div className='game-content'>
+      {isLoading ? (
+        <Spin size='large' />
+      ) : (
+        <div className='game-detail'>
+          <img src={data?.image?.original_url} width='200px' height='200px' />
+          <p>{data?.deck}</p>
+          <div>
+            Platforms:
+            <ul>
+              {data?.platforms?.map(platform => (
+                <li key={platform?.name}>{platform?.name}</li>
+              ))}
+            </ul>
+          </div>
+          <a href={data?.site_detail_url}>More info at giantbomb.com</a>
+        </div>
+      )}
+    </div>
+  );
+};

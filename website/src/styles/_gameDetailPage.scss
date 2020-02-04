@@ -1,0 +1,9 @@
+.game-content {
+  padding: 2rem;
+  .game-detail {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
