@@ -92,7 +92,12 @@ const GameInformation = ({ game }) => {
         <Spin size='large' />
       ) : (
         <div className='game-detail'>
-          <img src={data?.image?.original_url} width='200px' height='200px' />
+          <img
+            src={data?.image?.original_url}
+            width='200px'
+            height='200px'
+            alt={`${game?.name} art`}
+          />
           <p>{data?.deck}</p>
           <div>
             Platforms:
