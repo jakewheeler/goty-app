@@ -1,4 +1,4 @@
-const admin = require('../firebase/firestore').admin;
+import { admin } from '../firebase/firestore';
 
 const getAuthToken = (req, res, next) => {
   if (
@@ -27,4 +27,4 @@ const checkIfAuthenticated = (req, res, next) => {
   });
 };
 
-module.exports = checkIfAuthenticated;
+export default checkIfAuthenticated;

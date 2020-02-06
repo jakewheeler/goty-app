@@ -1,10 +1,7 @@
 import express from 'express';
 const router = express.Router();
-const firebase = require('../firebase/firestore');
-const checkIfAuthenticated = require('../middleware');
-
-const db = firebase.db;
-const firestore = firebase.firestore;
+import checkIfAuthenticated from '../middleware';
+import { db, firestore } from '../firebase/firestore';
 
 router.get('/list/:key', checkIfAuthenticated, async (req, res) => {
   const key = req.params.key;

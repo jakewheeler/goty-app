@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
 import apiRoutes from './routes/giantbomb';
 
-const app = express();
+const app: express.Application = express();
 const PORT: number = 5000;
 
 const start = (): void => {

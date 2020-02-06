@@ -1,7 +1,8 @@
 import express from 'express';
-const router = express.Router();
-const checkIfAuthenticated = require('../middleware');
+import checkIfAuthenticated from '../middleware';
 import { getGameListByNameAndYear, getGameById } from '../api';
+
+const router = express.Router();
 
 router.get(
   '/gamelist/:gameName/:listYear',

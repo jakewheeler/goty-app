@@ -1,13 +1,25 @@
-const admin = require('firebase-admin');
+import admin from 'firebase-admin';
 
-let serviceAccount = require('../../files/serviceRoleKey.json');
+import serviceAccount from '../../files/serviceRoleKey.json';
+
+const params = {
+  type: serviceAccount.type,
+  projectId: serviceAccount.project_id,
+  privateKeyId: serviceAccount.private_key_id,
+  privateKey: serviceAccount.private_key,
+  clientEmail: serviceAccount.client_email,
+  clientId: serviceAccount.client_id,
+  authUri: serviceAccount.auth_uri,
+  tokenUri: serviceAccount.token_uri,
+  authProviderX509CertUrl: serviceAccount.auth_provider_x509_cert_url,
+  clientC509CertUrl: serviceAccount.client_x509_cert_url
+};
 
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
+  credential: admin.credential.cert(params),
   databaseURL: 'https://my-goty-app-a4e1e.firebaseio.com'
 });
 
-let db = admin.firestore();
-let firestore = admin.firestore;
-
-module.exports = { db, firestore, admin };
+const db = admin.firestore();
+const firestore = admin.firestore;
+export { db, firestore, admin };
