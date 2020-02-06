@@ -1,11 +1,12 @@
-const express = require('express');
-const app = express();
-const PORT = 5000;
-const apiRoutes = require('./routes/giantbomb');
-const userRoutes = require('./routes/user');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
+import userRoutes from './routes/user';
+import apiRoutes from './routes/giantbomb';
 
-function start() {
+const app = express();
+const PORT: number = 5000;
+
+const start = (): void => {
   // middleware
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
@@ -15,6 +16,6 @@ function start() {
   app.use('/user', userRoutes);
 
   app.listen(PORT, () => console.log(`App is listening on port ${PORT}`));
-}
+};
 
-module.exports = { start };
+export default start;

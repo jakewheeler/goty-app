@@ -27,4 +27,5 @@ yarn-error.log*
 files/
 
 /server/node_modules
+/server/dist
 /website/node_modules

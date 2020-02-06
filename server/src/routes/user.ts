@@ -1,4 +1,4 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
 const firebase = require('../firebase/firestore');
 const checkIfAuthenticated = require('../middleware');
@@ -60,4 +60,4 @@ router.put('/list/:key', checkIfAuthenticated, async (req, res) => {
   }
 });
 
-module.exports = router;
+export default router;
