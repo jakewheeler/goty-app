@@ -1,9 +1,11 @@
-import express from 'express';
+import { Express } from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
 import apiRoutes from './routes/giantbomb';
 
-const app: express.Application = express();
+const express = require('express');
+
+const app: Express = express();
 const PORT: number = 5000;
 
 const start = (): void => {

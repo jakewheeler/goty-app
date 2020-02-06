@@ -1,18 +1,28 @@
 import { admin } from '../firebase/firestore';
+import { Response, NextFunction } from 'express';
+import { IGetUserAuthRequest } from '../interfaces/middleware.interface';
 
-const getAuthToken = (req, res, next) => {
+const getAuthToken = (
+  req: IGetUserAuthRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   if (
     req.headers.authorization &&
     req.headers.authorization.split(' ')[0] === 'Bearer'
   ) {
     req.token = req.headers.authorization.split(' ')[1];
   } else {
-    req.token = null;
+    req.token = '';
   }
   next();
 };
 
-const checkIfAuthenticated = (req, res, next) => {
+const checkIfAuthenticated = (
+  req: IGetUserAuthRequest,
+  res: Response,
+  next: NextFunction
+): void => {
   getAuthToken(req, res, async () => {
     try {
       const { token } = req;
