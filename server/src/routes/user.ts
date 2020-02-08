@@ -1,4 +1,4 @@
-import express, { Response, Request, NextFunction } from 'express';
+import express, { Response, Request } from 'express';
 import checkIfAuthenticated from '../middleware';
 import { db, firestore } from '../firebase/firestore';
 
@@ -18,7 +18,7 @@ router.get(
       const list = await gameListsRef.get();
       if (list.empty) return res.send({ games: [] });
 
-      const gameList = [];
+      const gameList: Object[] = [];
       list.forEach(x => gameList.push(x.data()));
       const [sortedList] = gameList;
 

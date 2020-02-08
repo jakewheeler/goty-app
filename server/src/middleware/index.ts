@@ -1,9 +1,8 @@
 import { admin } from '../firebase/firestore';
-import { Response, NextFunction } from 'express';
-import { IGetUserAuthRequest } from '../interfaces/middleware.interface';
+import { Response, NextFunction, Request } from 'express';
 
 const getAuthToken = (
-  req: IGetUserAuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): void => {
@@ -15,17 +14,18 @@ const getAuthToken = (
   } else {
     req.token = '';
   }
-  next();
+  return next();
 };
 
 const checkIfAuthenticated = (
-  req: IGetUserAuthRequest,
+  req: Request,
   res: Response,
   next: NextFunction
 ): void => {
   getAuthToken(req, res, async () => {
     try {
       const { token } = req;
+      if (typeof token !== 'string') throw new Error('token is not a string');
       const userInfo = await admin.auth().verifyIdToken(token);
       req.authId = userInfo.uid;
       return next();
