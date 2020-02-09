@@ -89,7 +89,9 @@ const GameInformation = ({ game }) => {
   return (
     <div className='game-content'>
       {isLoading ? (
-        <Spin size='large' />
+        <div className='game-detail-loading'>
+          <Spin size='large' />
+        </div>
       ) : (
         <div className='game-detail'>
           <img

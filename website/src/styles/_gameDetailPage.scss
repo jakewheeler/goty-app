@@ -1,5 +1,14 @@
 .game-content {
   padding: 2rem;
+
+  .game-detail-loading {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.5rem;
+  }
+
   .game-detail {
     display: flex;
     flex-direction: column;
