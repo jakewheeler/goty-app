@@ -5,6 +5,7 @@ import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import Login from './Login';
 import Logout from './Logout';
 import { Link } from 'react-router-dom';
+import GitHubLogo from './GitHubLogo';
 
 const Header = () => {
   return (
@@ -57,9 +58,14 @@ export const PlainHeader = ({ children }) => {
   return (
     <header>
       <div className='site-info'>
-        <Link to='/'>
-          <h1>My_GOTY</h1>
-        </Link>
+        <div className='left'>
+          <Link to='/'>
+            <h1>My_GOTY</h1>
+          </Link>
+        </div>
+        <div className='right'>
+          <GitHubLogo height='4rem' width='4rem' />
+        </div>
       </div>
       {children}
     </header>

@@ -13,11 +13,6 @@ const YearPicker = () => {
     setCurrentYear(value);
   }
 
-  function isGamelistEmpty(list) {
-    if (list.length <= 0) return true;
-    return false;
-  }
-
   const years = (() => {
     const currentYear = new Date().getFullYear();
     const yearArr = [];
