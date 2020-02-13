@@ -2,6 +2,7 @@ import { Express } from 'express';
 import bodyParser from 'body-parser';
 import userRoutes from './routes/user';
 import apiRoutes from './routes/giantbomb';
+import path from 'path';
 
 const express = require('express');
 

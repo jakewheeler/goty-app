@@ -1,11 +1,7 @@
 import { admin } from '../firebase/firestore';
 import { Response, NextFunction, Request } from 'express';
 
-const getAuthToken = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+const getAuthToken = (req: Request, next: NextFunction): void => {
   if (
     req.headers.authorization &&
     req.headers.authorization.split(' ')[0] === 'Bearer'
@@ -22,7 +18,7 @@ const checkIfAuthenticated = (
   res: Response,
   next: NextFunction
 ): void => {
-  getAuthToken(req, res, async () => {
+  getAuthToken(req, async () => {
     try {
       const { token } = req;
       if (typeof token !== 'string') throw new Error('token is not a string');

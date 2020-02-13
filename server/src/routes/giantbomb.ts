@@ -18,6 +18,7 @@ router.get(
         return res.sendStatus(500);
       }
     }
+    return res.status(404).send({ error: 'Game not found in selected year' });
   }
 );
 
@@ -31,6 +32,7 @@ router.get('/game/:id', checkIfAuthenticated, async (req, res) => {
       return res.sendStatus(500);
     }
   }
+  return res.status(404).send({ error: 'Game ID not found' });
 });
 
 export default router;
