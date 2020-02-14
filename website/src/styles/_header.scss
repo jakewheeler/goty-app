@@ -1,8 +1,5 @@
 header {
   background-color: $header-background-color;
-  display: flex;
-  flex-direction: row;
-  justify-content: flex-start;
   color: white;
   padding: 0.5rem;
 
@@ -16,7 +13,7 @@ header {
     flex-direction: row;
     align-items: center;
 
-    .left {
+    .plain-header-left {
       font-size: calc(10px + 2vmin);
       margin-left: 1.5rem;
       width: 100%;
@@ -25,7 +22,7 @@ header {
       justify-content: flex-start;
     }
 
-    .right {
+    .plain-header-right {
       margin-left: 1.5rem;
       width: 100%;
       display: flex;
@@ -53,6 +50,7 @@ header {
       display: flex;
       flex-direction: row;
       justify-content: flex-end;
+      margin-right: 0.5rem;
 
       .user-data-items {
         display: flex;

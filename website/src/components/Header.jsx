@@ -58,12 +58,12 @@ export const PlainHeader = ({ children }) => {
   return (
     <header>
       <div className='site-info'>
-        <div className='left'>
+        <div className='plain-header-left'>
           <Link to='/'>
             <h1>My_GOTY</h1>
           </Link>
         </div>
-        <div className='right'>
+        <div className='plain-header-right'>
           <GitHubLogo height='4rem' width='4rem' />
         </div>
       </div>
