@@ -20,9 +20,9 @@ jobs:
         cd ../website
         npm install
         npm run build
-        mv build ../server/dist/src
+        mv build/ ../server/dist/
         cd ../server
-        cd dist/src
+        cd dist
         ls
         
        
