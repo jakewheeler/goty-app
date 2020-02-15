@@ -22,7 +22,7 @@ jobs:
         npm run build
         mv build ../server/dist/src
         cd ../server
-        cd dist
+        cd dist/src
         ls
         
        
