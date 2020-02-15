@@ -1,22 +1,13 @@
 import admin from 'firebase-admin';
-
-import serviceAccount from '../../files/serviceRoleKey.json';
-
-const params = {
-  type: serviceAccount.type,
-  projectId: serviceAccount.project_id,
-  privateKeyId: serviceAccount.private_key_id,
-  privateKey: serviceAccount.private_key,
-  clientEmail: serviceAccount.client_email,
-  clientId: serviceAccount.client_id,
-  authUri: serviceAccount.auth_uri,
-  tokenUri: serviceAccount.token_uri,
-  authProviderX509CertUrl: serviceAccount.auth_provider_x509_cert_url,
-  clientC509CertUrl: serviceAccount.client_x509_cert_url
-};
+import dotenv from 'dotenv';
+dotenv.config();
 
 admin.initializeApp({
-  credential: admin.credential.cert(params),
+  credential: admin.credential.cert({
+    projectId: process.env.PROJECT_ID,
+    privateKey: process.env.PRIVATE_KEY?.replace(/\\n/g, '\n'),
+    clientEmail: process.env.CLIENT_EMAIL
+  }),
   databaseURL: 'https://my-goty-app-a4e1e.firebaseio.com'
 });
 
