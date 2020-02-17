@@ -20,10 +20,9 @@ jobs:
           cd ../website
           npm install
           npm run build
-          mv build/ ../server/dist/
-          cd ../server
-          mv dist/ ../
-          mv node_modules/ ../dist/
+          mv build/ ../dist
+          cd ..
+          mv ./server/node_modules/ dist
       - name: Login to Heroku Container registry
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
