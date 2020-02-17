@@ -15,10 +15,10 @@ jobs:
           node-version: '13.6.0'
       - run: |
           cd server
-          npm ci --only=production
+          npm install
           npm run build
           cd ../website
-          npm ci --only=production
+          npm install
           npm run build
           mv build/ ../server/dist/
           cd ../server
@@ -31,9 +31,8 @@ jobs:
       - name: Build and push
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web 
+        run: heroku container:push -a ${{ secrets.HEROKU_APP_NAME }} web
       - name: Release
         env:
           HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
-        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web 
-
+        run: heroku container:release -a ${{ secrets.HEROKU_APP_NAME }} web
