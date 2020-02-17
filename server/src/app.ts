@@ -7,7 +7,7 @@ import path from 'path';
 const express = require('express');
 
 const app: Express = express();
-const PORT: number = 5000;
+const PORT = process.env.PORT || 5000;
 
 const start = (): void => {
   // middleware
