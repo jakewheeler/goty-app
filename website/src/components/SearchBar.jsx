@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { GameCard } from './GamesList';
 import { Input } from 'antd';
 import { Spin } from 'antd';
+import { List } from 'antd';
 import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
@@ -65,15 +66,16 @@ const SearchResults = ({ isSearching, searchResults }) => {
   if (!searchResults?.length || !isSearching) return <div></div>;
 
   return (
-    <div className='search-results' id='searchResults'>
-      <ul>
-        {searchResults.map(result => (
-          <li key={result.id}>
-            <GameCard game={result} />
-          </li>
-        ))}
-      </ul>
-    </div>
+    <List
+      className='search-results'
+      itemLayout='horizontal'
+      dataSource={searchResults}
+      renderItem={game => (
+        <List.Item key={game.id} className='search-item'>
+          <GameCard game={game} />
+        </List.Item>
+      )}
+    />
   );
 };
 
