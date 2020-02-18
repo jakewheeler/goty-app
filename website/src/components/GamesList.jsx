@@ -1,9 +1,6 @@
 import React, { useRef, useCallback } from 'react';
 import update from 'immutability-helper';
 import { useDrag, useDrop } from 'react-dnd';
-import { DndProvider } from 'react-dnd';
-import MultiBackend from 'react-dnd-multi-backend';
-import HTML5toTouch from 'react-dnd-multi-backend/dist/esm/HTML5toTouch';
 import { useGameListState } from '../contexts/GamesListContext';
 import { Button, Spin } from 'antd';
 import { Card } from 'antd';
@@ -14,19 +11,44 @@ import { useState } from 'react';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
 import { Link } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 const typeMap = {
   GAME: 'game'
 };
 
+const reorder = (list, startIndex, endIndex) => {
+  const result = Array.from(list);
+  const [removed] = result.splice(startIndex, 1);
+  result.splice(endIndex, 0, removed);
+
+  return result;
+};
+
 const DraggableArea = () => {
+  const {
+    gameListState: [games, setGames],
+    yearState: [currentYear]
+  } = useGameListState();
+
+  const onDragEnd = result => {
+    // dropped outside the list
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(games, result.source.index, result.destination.index);
+
+    setGames(items);
+  };
+
   return (
     <>
-      <DndProvider backend={MultiBackend} options={HTML5toTouch}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <FirebaseAuthConsumer>
           {({ user }) => <GamesList user={user} />}
         </FirebaseAuthConsumer>
-      </DndProvider>
+      </DragDropContext>
     </>
   );
 };
@@ -87,32 +109,12 @@ const GamesList = ({ user }) => {
     setDisableBtn(false); // enable on change
   }, [games]);
 
-  const moveGame = useCallback(
-    (dragIndex, hoverIndex) => {
-      const dragGame = games[dragIndex];
-      setGames(
-        update(games, {
-          $splice: [
-            [dragIndex, 1],
-            [hoverIndex, 0, dragGame]
-          ]
-        })
-      );
-    },
-    [games, setGames]
-  );
-
   const renderGame = (game, index) => {
     return (
-      <Game
-        key={game.id}
-        index={index}
-        id={game.id}
-        gameObj={game}
-        moveGame={moveGame}
-      />
+      <DraggableGame key={game.id} index={index} id={game.id} gameObj={game} />
     );
   };
+
   if (games.length <= 0 && disableBtn) {
     return (
       <div className='empty-list'>
@@ -142,83 +144,46 @@ const GamesList = ({ user }) => {
           >
             Save list
           </Button>
-          {games.map((game, i) => renderGame(game, i))}
+          <Droppable droppableId='droppable'>
+            {(provided, snapshot) => (
+              <div {...provided.droppableProps} ref={provided.innerRef}>
+                {games.map((item, index) => renderGame(item, index))}
+                {provided.placeholder}
+              </div>
+            )}
+          </Droppable>
         </div>
       )}
     </>
   );
 };
 
-const Game = ({ id, gameObj, index, moveGame }) => {
-  const ref = useRef(null);
-  const [, drop] = useDrop({
-    accept: typeMap.GAME,
-    hover(item, monitor) {
-      if (!ref.current) {
-        return;
-      }
-      const dragIndex = item.index;
-      const hoverIndex = index;
-      // Don't replace items with themselves
-      if (dragIndex === hoverIndex) {
-        return;
-      }
-      // Determine rectangle on screen
-      const hoverBoundingRect = ref.current.getBoundingClientRect();
-      // Get vertical middle
-      const hoverMiddleY =
-        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
-      // Determine mouse position
-      const clientOffset = monitor.getClientOffset();
-      // Get pixels to the top
-      const hoverClientY = clientOffset.y - hoverBoundingRect.top;
-      // Only perform the move when the mouse has crossed half of the items height
-      // When dragging downwards, only move when the cursor is below 50%
-      // When dragging upwards, only move when the cursor is above 50%
-      // Dragging downwards
-      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
-        return;
-      }
-      // Dragging upwards
-      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
-        return;
-      }
-      // Time to actually perform the action
-      moveGame(dragIndex, hoverIndex);
-      // Note: we're mutating the monitor item here!
-      // Generally it's better to avoid mutations,
-      // but it's good here for the sake of performance
-      // to avoid expensive index searches.
-      item.index = hoverIndex;
-    }
-  });
-  const [{ isDragging }, drag] = useDrag({
-    item: { type: typeMap.GAME, id, index },
-    collect: monitor => ({
-      isDragging: monitor.isDragging()
-    })
-  });
-  const opacity = isDragging ? 0 : 1;
-  drag(drop(ref));
+const DraggableGame = ({ id, gameObj, index }) => {
   return (
-    <div
-      className='game'
-      ref={ref}
-      style={{
-        opacity,
-        borderStyle: 'dashed',
-        padding: '20px'
-      }}
-    >
-      <div className='game-container'>
-        <div className='game-info'>
-          <Link to={`/game/${gameObj.id}`}>{gameObj.name}</Link>
+    <Draggable key={id} draggableId={id.toString()} index={index}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          // style={getItemStyle(
+          //   snapshot.isDragging,
+          //   provided.draggableProps.style
+          // )}
+        >
+          <div className='game'>
+            <div className='game-container'>
+              <div className='game-info'>
+                <Link to={`/game/${gameObj.id}`}>{gameObj.name}</Link>
+              </div>
+              <div className='remove-btn'>
+                <GameCardButton game={gameObj} />
+              </div>
+            </div>
+          </div>
         </div>
-        <div className='remove-btn'>
-          <GameCardButton game={gameObj} />
-        </div>
-      </div>
-    </div>
+      )}
+    </Draggable>
   );
 };
 
