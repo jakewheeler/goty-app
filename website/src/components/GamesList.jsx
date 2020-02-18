@@ -1,6 +1,4 @@
-import React, { useRef, useCallback } from 'react';
-import update from 'immutability-helper';
-import { useDrag, useDrop } from 'react-dnd';
+import React from 'react';
 import { useGameListState } from '../contexts/GamesListContext';
 import { Button, Spin } from 'antd';
 import { Card } from 'antd';
@@ -13,9 +11,22 @@ import { useFetchToken } from '../hooks/customHooks';
 import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
-const typeMap = {
-  GAME: 'game'
-};
+const GRID = 8;
+
+const getItemStyle = (isDragging, draggableStyle) => ({
+  userSelect: 'none',
+  padding: GRID * 2,
+  margin: `0 0 ${GRID}px 0`,
+
+  background: isDragging ? 'lightgreen' : 'white',
+
+  ...draggableStyle
+});
+
+const getListStyle = isDraggingOver => ({
+  background: 'grey',
+  padding: GRID
+});
 
 const reorder = (list, startIndex, endIndex) => {
   const result = Array.from(list);
@@ -27,12 +38,10 @@ const reorder = (list, startIndex, endIndex) => {
 
 const DraggableArea = () => {
   const {
-    gameListState: [games, setGames],
-    yearState: [currentYear]
+    gameListState: [games, setGames]
   } = useGameListState();
 
   const onDragEnd = result => {
-    // dropped outside the list
     if (!result.destination) {
       return;
     }
@@ -146,7 +155,11 @@ const GamesList = ({ user }) => {
           </Button>
           <Droppable droppableId='droppable'>
             {(provided, snapshot) => (
-              <div {...provided.droppableProps} ref={provided.innerRef}>
+              <div
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+                style={getListStyle(snapshot.isDraggingOver)}
+              >
                 {games.map((item, index) => renderGame(item, index))}
                 {provided.placeholder}
               </div>
@@ -166,10 +179,10 @@ const DraggableGame = ({ id, gameObj, index }) => {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          // style={getItemStyle(
-          //   snapshot.isDragging,
-          //   provided.draggableProps.style
-          // )}
+          style={getItemStyle(
+            snapshot.isDragging,
+            provided.draggableProps.style
+          )}
         >
           <div className='game'>
             <div className='game-container'>
