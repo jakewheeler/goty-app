@@ -21,7 +21,7 @@ const SearchBar = () => {
     const text = e.target.value;
     setIsLoading(false);
     setIsSearching(false);
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && text) {
       setIsLoading(true);
       const searchedGames = await axios.get(
         `/api/gamelist/${text}/${currentYear}`,
