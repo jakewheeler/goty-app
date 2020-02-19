@@ -2,7 +2,7 @@
 
 My_GOTY is a web application to help you create lists of your favorite games from each year and share them with your friends.
 
-![demo](https://i.imgur.com/Pm91Yw1.gifv)
+![demo](https://i.imgur.com/Pm91Yw1.gif)
 
 ## Current Features
 
