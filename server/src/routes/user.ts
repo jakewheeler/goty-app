@@ -71,4 +71,21 @@ router.put(
   }
 );
 
+router.get('/years/:key', async (req: Request, res: Response) => {
+  let key = req.params.key;
+  key = '2RoigklRt4cB6wZmO7MtM0qb1qE3';
+  try {
+    const allRecords = await db.collection('gamelists').get(); // get all records
+    const userRecords = allRecords.docs
+      .map(doc => doc.id)
+      .filter(id => id.includes(key)); // get all user records
+    const userYears = userRecords.map(record => {
+      return { year: record.slice(key.length + 1), hasData: false };
+    });
+    return res.send(userYears);
+  } catch (error) {
+    return res.status(403).send({ error: 'could not get records' });
+  }
+});
+
 export default router;
