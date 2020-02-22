@@ -46,6 +46,24 @@ router.get(
   }
 );
 
+const deleteIfEmpty = async (key: string) => {
+  let deleteRecord = false;
+
+  try {
+    let dbRef = db.collection('gamelists');
+    let query = dbRef.where(firestore.FieldPath.documentId(), '==', key);
+    let gameList = await query.get();
+    deleteRecord = gameList.docs.map(g => g.data().games.length <= 0)[0];
+
+    if (deleteRecord) {
+      let deleteDoc = dbRef.doc(key).delete();
+      console.log(deleteDoc);
+    }
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 router.put(
   '/list/:key',
   checkIfAuthenticated,
@@ -64,6 +82,7 @@ router.put(
         .collection('gamelists')
         .doc(key)
         .set(gamelist);
+      deleteIfEmpty(key);
       return res.status(200).send(gamelist);
     } catch (err) {
       return res.status(403).send({ error: 'could not update game list' });
