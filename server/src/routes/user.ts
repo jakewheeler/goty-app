@@ -56,8 +56,7 @@ const deleteIfEmpty = async (key: string) => {
     deleteRecord = gameList.docs.map(g => g.data().games.length <= 0)[0];
 
     if (deleteRecord) {
-      let deleteDoc = dbRef.doc(key).delete();
-      console.log(deleteDoc);
+      dbRef.doc(key).delete();
     }
   } catch (error) {
     console.error(error);
@@ -91,20 +90,33 @@ router.put(
 );
 
 router.get('/years/:key', async (req: Request, res: Response) => {
-  let key = req.params.key;
-  key = '2RoigklRt4cB6wZmO7MtM0qb1qE3';
+  const key = req.params.key;
+  const years = getYears();
   try {
     const allRecords = await db.collection('gamelists').get(); // get all records
     const userRecords = allRecords.docs
       .map(doc => doc.id)
       .filter(id => id.includes(key)); // get all user records
-    const userYears = userRecords.map(record => {
-      return { year: record.slice(key.length + 1), hasData: false };
+    const userYears = userRecords.map(record => record.slice(key.length + 1));
+    const yearsData = years.map(year => {
+      return {
+        year: year,
+        hasData: userYears.includes(year.toString()) ? true : false
+      };
     });
-    return res.send(userYears);
+    return res.send(yearsData);
   } catch (error) {
     return res.status(403).send({ error: 'could not get records' });
   }
 });
+
+const getYears = (): number[] => {
+  const currentYear = new Date().getFullYear();
+  const yearArr = [];
+  for (let i = currentYear; i >= 2000; i--) {
+    yearArr.push(i);
+  }
+  return yearArr;
+};
 
 export default router;
