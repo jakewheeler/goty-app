@@ -89,26 +89,32 @@ router.put(
   }
 );
 
-router.get('/years/:key', async (req: Request, res: Response) => {
-  const key = req.params.key;
-  const years = getYears();
-  try {
-    const allRecords = await db.collection('gamelists').get(); // get all records
-    const userRecords = allRecords.docs
-      .map(doc => doc.id)
-      .filter(id => id.includes(key)); // get all user records
-    const userYears = userRecords.map(record => record.slice(key.length + 1));
-    const yearsData = years.map(year => {
-      return {
-        year: year,
-        hasData: userYears.includes(year.toString()) ? true : false
-      };
-    });
-    return res.send(yearsData);
-  } catch (error) {
-    return res.status(403).send({ error: 'could not get records' });
+router.get(
+  '/years/:key',
+  checkIfAuthenticated,
+  async (req: Request, res: Response) => {
+    const key = req.params.key;
+    const years = getYears();
+    try {
+      const allRecords = await db.collection('gamelists').get(); // get all records
+      const userRecords = allRecords.docs
+        .map(doc => doc.id)
+        .filter(id => id.includes(key)); // get all user records
+      const userYears: string[] = userRecords.map(record =>
+        record.slice(key.length + 1)
+      );
+      const yearsData = years.map(year => {
+        return {
+          year: year,
+          hasData: userYears.includes(year.toString()) ? true : false
+        };
+      });
+      return res.send(yearsData);
+    } catch (error) {
+      return res.status(403).send({ error: 'could not get records' });
+    }
   }
-});
+);
 
 const getYears = (): number[] => {
   const currentYear = new Date().getFullYear();

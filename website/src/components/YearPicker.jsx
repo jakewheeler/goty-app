@@ -1,27 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGameListState } from '../contexts/GamesListContext';
 import { Select } from 'antd';
 import axios from 'axios';
+import { useFetchToken } from '../hooks/customHooks';
+import { getRequestConfig } from '../helpers/getRequestJwt';
 
 const { Option } = Select;
 
-const YearPicker = () => {
+const YearPicker = ({ user }) => {
+  const token = useFetchToken();
+  const [years, setYears] = useState([]);
+  const { uid } = user;
+
   const {
-    yearState: [, setCurrentYear]
+    yearState: [currentYear, setCurrentYear]
   } = useGameListState();
+
+  useEffect(() => {
+    if (!token) return;
+
+    async function getYearData() {
+      try {
+        const years = await axios.get(
+          `user/years/${uid}`,
+          getRequestConfig(token)
+        );
+        setYears(years.data);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getYearData();
+  }, [currentYear, token, uid]);
 
   function handleChange(value) {
     setCurrentYear(value);
   }
-
-  const years = (() => {
-    const currentYear = new Date().getFullYear();
-    const yearArr = [];
-    for (let i = currentYear; i >= 2000; i--) {
-      yearArr.push(i);
-    }
-    return yearArr;
-  })();
 
   return (
     <>
@@ -30,9 +44,17 @@ const YearPicker = () => {
         style={{ width: 120 }}
         onChange={handleChange}
       >
-        {years.map(year => (
-          <Option value={year} key={year}>
-            {year}
+        {years.map(attr => (
+          <Option
+            value={attr.year}
+            key={attr.year}
+            style={
+              attr.hasData
+                ? { backgroundColor: 'yellow' }
+                : { backgroundColor: 'white' }
+            }
+          >
+            {attr.year}
           </Option>
         ))}
       </Select>
