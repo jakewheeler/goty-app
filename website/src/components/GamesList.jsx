@@ -1,5 +1,5 @@
 import React from 'react';
-import { useGameListState } from '../contexts/GamesListContext';
+import { useGameListState, getYearData } from '../contexts/GamesListContext';
 import { Button, Spin } from 'antd';
 import { Card } from 'antd';
 import { useEffect } from 'react';
@@ -68,28 +68,25 @@ const GamesList = ({ user }) => {
   const { uid } = user;
   const {
     gameListState: [games, setGames],
-    yearState: [currentYear]
+    yearState: [currentYear],
+    yearListState: [, setYears]
   } = useGameListState();
+
   const saveKey = `${uid}_${currentYear}`;
   const token = useFetchToken();
 
   async function saveListHandler() {
     setDisableBtn(true); // disable button
 
-    if (getTableExists(`/user/list/${saveKey}/exists`)) {
-      await axios.put(
-        `/user/list/${saveKey}`,
-        {
-          gamelist: { games }
-        },
-        getRequestConfig(token)
-      );
-    }
-  }
-
-  async function getTableExists(url) {
-    let response = await axios.get(url, getRequestConfig(token));
-    return response.data;
+    await axios.put(
+      `/user/list/${saveKey}`,
+      {
+        gamelist: { games }
+      },
+      getRequestConfig(token)
+    );
+    const yearData = await getYearData(token, uid);
+    setYears([...yearData]);
   }
 
   useEffect(() => {
