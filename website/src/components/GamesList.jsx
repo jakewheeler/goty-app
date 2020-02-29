@@ -85,6 +85,7 @@ const GamesList = ({ user }) => {
       },
       getRequestConfig(token)
     );
+
     const yearData = await getYearData(token, uid);
     setYears([...yearData]);
   }

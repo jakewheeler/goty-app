@@ -56,7 +56,7 @@ const deleteIfEmpty = async (key: string) => {
     deleteRecord = gameList.docs.map(g => g.data().games.length <= 0)[0];
 
     if (deleteRecord) {
-      dbRef.doc(key).delete();
+      await dbRef.doc(key).delete();
     }
   } catch (error) {
     console.error(error);
@@ -81,7 +81,7 @@ router.put(
         .collection('gamelists')
         .doc(key)
         .set(gamelist);
-      deleteIfEmpty(key);
+      await deleteIfEmpty(key);
       return res.status(200).send(gamelist);
     } catch (err) {
       return res.status(403).send({ error: 'could not update game list' });
@@ -95,21 +95,26 @@ router.get(
   async (req: Request, res: Response) => {
     const key = req.params.key;
     const years = getYears();
+
     try {
       const allRecords = await db.collection('gamelists').get(); // get all records
+
       const userRecords = allRecords.docs
         .map(doc => doc.id)
         .filter(id => id.includes(key)); // get all user records
+
       const userYears: string[] = userRecords.map(record =>
         record.slice(key.length + 1)
       );
+
       const yearsData = years.map(year => {
         return {
           year: year,
           hasData: userYears.includes(year.toString()) ? true : false
         };
       });
-      return res.send(yearsData);
+
+      return res.status(200).send(yearsData);
     } catch (error) {
       return res.status(403).send({ error: 'could not get records' });
     }
