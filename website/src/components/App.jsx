@@ -6,6 +6,7 @@ import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { GameListProvider } from '../contexts/GamesListContext';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { NoMatch } from '../pages/NoMatchPage';
+import ListSharePage from '../pages/ListSharePage';
 
 // styling
 import '../styles/main.scss';
@@ -24,6 +25,11 @@ const App = () => {
             <Route path='/game/:gameId'>
               <FirebaseAuthConsumer>
                 {({ user }) => <GameDetailPage user={user} />}
+              </FirebaseAuthConsumer>
+            </Route>
+            <Route path='/share/:key/:year'>
+              <FirebaseAuthConsumer>
+                {({ user }) => <ListSharePage user={user} />}
               </FirebaseAuthConsumer>
             </Route>
             <Route>

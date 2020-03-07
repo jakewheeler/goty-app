@@ -46,6 +46,23 @@ router.get(
   }
 );
 
+router.get(
+  '/list/share/:key',
+  checkIfAuthenticated,
+  async (req: Request, res: Response) => {
+    try {
+      let key = req.params.key;
+
+      let dbRef = db.collection('gamelists');
+      let query = dbRef.where(firestore.FieldPath.documentId(), '==', key);
+      let gameList = await query.get();
+      return res.status(200).send(gameList);
+    } catch (err) {
+      return res.send(404).send({ error: 'Game list not found' });
+    }
+  }
+);
+
 const deleteIfEmpty = async (key: string) => {
   let deleteRecord = false;
 
@@ -73,7 +90,7 @@ router.put(
     if (gamelist.length > 10) {
       return res
         .status(403)
-        .send({ error: 'game list can only be a maximum of 10 games' });
+        .send({ error: 'Game list can only be a maximum of 10 games' });
     }
 
     try {
@@ -84,7 +101,7 @@ router.put(
       await deleteIfEmpty(key);
       return res.status(200).send(gamelist);
     } catch (err) {
-      return res.status(403).send({ error: 'could not update game list' });
+      return res.status(403).send({ error: 'Could not update game list' });
     }
   }
 );
@@ -116,7 +133,7 @@ router.get(
 
       return res.status(200).send(yearsData);
     } catch (error) {
-      return res.status(403).send({ error: 'could not get records' });
+      return res.status(403).send({ error: 'Could not get records' });
     }
   }
 );

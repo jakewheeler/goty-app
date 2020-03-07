@@ -36,7 +36,7 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DraggableArea = () => {
+const DraggableArea = ({ isEditable = true }) => {
   const {
     gameListState: [games, setGames]
   } = useGameListState();
@@ -55,14 +55,14 @@ const DraggableArea = () => {
     <>
       <DragDropContext onDragEnd={onDragEnd}>
         <FirebaseAuthConsumer>
-          {({ user }) => <GamesList user={user} />}
+          {({ user }) => <GamesList user={user} isEditable={isEditable} />}
         </FirebaseAuthConsumer>
       </DragDropContext>
     </>
   );
 };
 
-const GamesList = ({ user }) => {
+const GamesList = ({ user, isEditable }) => {
   const [disableBtn, setDisableBtn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { uid } = user;
@@ -115,10 +115,16 @@ const GamesList = ({ user }) => {
   useEffect(() => {
     setDisableBtn(false); // enable on change
   }, [games]);
-
+  // console.log(isEditable);
   const renderGame = (game, index) => {
     return (
-      <DraggableGame key={game.id} index={index} id={game.id} gameObj={game} />
+      <DraggableGame
+        key={game.id}
+        index={index}
+        id={game.id}
+        gameObj={game}
+        disableDrag={!isEditable}
+      />
     );
   };
 
@@ -169,9 +175,14 @@ const GamesList = ({ user }) => {
   );
 };
 
-const DraggableGame = ({ id, gameObj, index }) => {
+const DraggableGame = ({ id, gameObj, index, disableDrag }) => {
   return (
-    <Draggable key={id} draggableId={id.toString()} index={index}>
+    <Draggable
+      key={id}
+      draggableId={id.toString()}
+      index={index}
+      isDragDisabled={disableDrag}
+    >
       {(provided, snapshot) => (
         <div
           ref={provided.innerRef}
@@ -187,9 +198,11 @@ const DraggableGame = ({ id, gameObj, index }) => {
               <div className='game-info'>
                 <Link to={`/game/${gameObj.id}`}>{gameObj.name}</Link>
               </div>
-              <div className='remove-btn'>
-                <GameCardButton game={gameObj} />
-              </div>
+              {!disableDrag && (
+                <div className='remove-btn'>
+                  <GameCardButton game={gameObj} />
+                </div>
+              )}
             </div>
           </div>
         </div>
