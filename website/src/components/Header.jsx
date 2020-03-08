@@ -29,7 +29,7 @@ const AuthHeaderContent = ({ user }) => {
       <SearchBar />
       <div className='user-data-container'>
         <div className='left-side'>
-          <YearPicker user={user}/>
+          <YearPicker user={user} />
         </div>
         <div className='right-side'>
           <div className='user-data-items'>

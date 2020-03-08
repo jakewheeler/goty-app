@@ -24,33 +24,35 @@ export const useFetchToken = () => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
-  firebase.auth().onAuthStateChanged(function(user) {
-    if (user) {
-      setUser(user);
-    } else {
-      setUser(null);
-    }
-  });
-
   useEffect(() => {
-    async function fetchUser() {
-      const fbUser = firebase.auth().currentUser;
-      setUser(fbUser);
-    }
-    fetchUser();
+    let subscribed = true;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user && subscribed) {
+        setUser(user);
+      } else if (subscribed) {
+        setUser(null);
+      }
+    });
+
+    return () => (subscribed = false);
   }, [setUser]);
 
   useEffect(() => {
+    let subscribed = true;
     async function getToken() {
       try {
         if (!user) return;
         let userToken = await user.getIdToken(true);
-        setToken(userToken);
+        if (subscribed) {
+          setToken(userToken);
+        }
       } catch (err) {
         console.error(err);
       }
     }
     getToken();
+
+    return () => (subscribed = false);
   }, [setToken, user]);
 
   return token;
@@ -60,16 +62,16 @@ export const useUserContext = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    let mounted = true;
+    let subscribed = true;
     firebase.auth().onAuthStateChanged(function(user) {
-      if (user && mounted) {
+      if (user && subscribed) {
         setUser(user);
-      } else {
+      } else if (subscribed) {
         setUser(null);
       }
     });
 
-    return () => (mounted = false);
+    return () => (subscribed = false);
   }, [setUser]);
 
   return user;

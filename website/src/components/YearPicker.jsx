@@ -15,13 +15,18 @@ const YearPicker = ({ user }) => {
   } = useGameListState();
 
   useEffect(() => {
+    let subscribed = true;
     if (!token) return;
 
     const fetchData = async () => {
       let yearData = await getYearData(token, uid);
       setYears(yearData);
     };
-    fetchData();
+    if (subscribed) {
+      fetchData();
+    }
+
+    return () => (subscribed = false);
   }, [currentYear, token, uid, setYears]);
 
   function handleChange(value) {

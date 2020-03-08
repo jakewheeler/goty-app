@@ -77,29 +77,39 @@ const GameListEditor = ({ user }) => {
   }
 
   useEffect(() => {
+    let subscribed = true;
     async function getGames() {
       try {
-        setIsLoading(true);
-        let resp = await axios.get(
-          `/user/list/${saveKey}`,
-          getRequestConfig(token)
-        );
-        let { games } = resp.data;
+        if (subscribed) {
+          setIsLoading(true);
+          let resp = await axios.get(
+            `/user/list/${saveKey}`,
+            getRequestConfig(token)
+          );
+          let { games } = resp.data;
 
-        setGames([...games]);
-        setIsLoading(false);
-        setDisableBtn(true);
+          setGames([...games]);
+          setIsLoading(false);
+          setDisableBtn(true);
+        }
       } catch (err) {
         console.error(err);
       }
     }
-    if (token) {
+    if (token && subscribed) {
       getGames();
     }
+
+    return () => (subscribed = false);
   }, [saveKey, setGames, setIsLoading, setDisableBtn, token]);
 
   useEffect(() => {
-    setDisableBtn(false); // enable on change
+    let subscribed = true;
+    if (subscribed) {
+      setDisableBtn(false); // enable on change
+    }
+
+    return () => (subscribed = false);
   }, [games]);
 
   const onDragEnd = result => {
