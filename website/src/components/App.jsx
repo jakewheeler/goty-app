@@ -5,7 +5,7 @@ import HomePage from './HomePage';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { GameListProvider } from '../contexts/GamesListContext';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import { NoMatch } from '../pages/NoMatchPage';
+import NoMatch from '../pages/NoMatchPage';
 import ListSharePage from '../pages/ListSharePage';
 
 // styling
@@ -15,44 +15,30 @@ import { GameDetailPage } from '../pages/GameDetailPage';
 const App = () => {
   return (
     <div className='App'>
-      <Router>
-        <GameListProvider>
-          <Switch>
-            <Route exact path='/'>
-              <Header />
-              <UserContent />
-            </Route>
-            <Route path='/game/:gameId'>
-              <FirebaseAuthConsumer>
-                {({ user }) => <GameDetailPage user={user} />}
-              </FirebaseAuthConsumer>
-            </Route>
-            <Route path='/share/:uid/:year'>
-              <FirebaseAuthConsumer>
-                {({ user }) => <ListSharePage user={user} />}
-              </FirebaseAuthConsumer>
-            </Route>
-            <Route>
-              <NoMatch />
-            </Route>
-          </Switch>
-        </GameListProvider>
-      </Router>
+      <FirebaseAuthConsumer>
+        {({ isSignedIn, user }) => (
+          <Router>
+            <GameListProvider>
+              <Switch>
+                <Route exact path='/'>
+                  <Header />
+                  {isSignedIn ? <GameListEditor user={user} /> : <HomePage />}
+                </Route>
+                <Route path='/game/:gameId'>
+                  {isSignedIn ? <GameDetailPage user={user} /> : <NoMatch />}
+                </Route>
+                <Route path='/share/:uid/:year'>
+                  {isSignedIn ? <ListSharePage user={user} /> : <NoMatch />}
+                </Route>
+                <Route>
+                  <NoMatch />
+                </Route>
+              </Switch>
+            </GameListProvider>
+          </Router>
+        )}
+      </FirebaseAuthConsumer>
     </div>
-  );
-};
-
-const UserContent = () => {
-  return (
-    <FirebaseAuthConsumer>
-      {({ isSignedIn, user }) => {
-        if (isSignedIn === true) {
-          return <GameListEditor user={user} />;
-        } else {
-          return <HomePage />;
-        }
-      }}
-    </FirebaseAuthConsumer>
   );
 };
 
