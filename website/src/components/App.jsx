@@ -47,7 +47,7 @@ const UserContent = () => {
     <FirebaseAuthConsumer>
       {({ isSignedIn, user }) => {
         if (isSignedIn === true) {
-          return <GameListEditor user={user}/>;
+          return <GameListEditor user={user} />;
         } else {
           return <HomePage />;
         }
@@ -55,4 +55,5 @@ const UserContent = () => {
     </FirebaseAuthConsumer>
   );
 };
+
 export default App;

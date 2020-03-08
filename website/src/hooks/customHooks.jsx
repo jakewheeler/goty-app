@@ -24,10 +24,17 @@ export const useFetchToken = () => {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
 
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      setUser(user);
+    } else {
+      setUser(null);
+    }
+  });
+
   useEffect(() => {
     async function fetchUser() {
       const fbUser = firebase.auth().currentUser;
-      console.log(fbUser);
       setUser(fbUser);
     }
     fetchUser();

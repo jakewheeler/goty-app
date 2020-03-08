@@ -55,10 +55,15 @@ router.get(
 
       let dbRef = db.collection('gamelists');
       let query = dbRef.where(firestore.FieldPath.documentId(), '==', key);
-      let gameList = await query.get();
-      return res.status(200).send(gameList);
+      let list = await query.get();
+
+      const gameList: Object[] = [];
+      list.forEach(x => gameList.push(x.data()));
+      console.log(gameList);
+      const [sortedList] = gameList;
+      return res.status(200).send(sortedList);
     } catch (err) {
-      return res.send(404).send({ error: 'Game list not found' });
+      return res.send(200).send({ games: [] });
     }
   }
 );

@@ -9,10 +9,11 @@ import { GamesList } from '../components/GamesList';
 import { useFetchToken } from '../hooks/customHooks';
 import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
+import { DragDropContext } from 'react-beautiful-dnd';
 
 const ListSharePage = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [games, setGames] = useState([]);
+  const [compGames, setCompGames] = useState([]);
   let { uid, year } = useParams();
   const userKey = `${uid}_${year}`;
 
@@ -28,7 +29,7 @@ const ListSharePage = () => {
         );
         let { games } = resp.data;
 
-        setGames([...games]);
+        setCompGames([...games]);
         setIsLoading(false);
       } catch (err) {
         console.error(err);
@@ -37,15 +38,17 @@ const ListSharePage = () => {
     if (token) {
       getGames();
     }
-  }, [userKey, setGames, setIsLoading, token]);
-
-  console.log(token);
+  }, [userKey, setCompGames, setIsLoading, token]);
 
   return (
     <div>
       <PlainHeader />
       <HomeHeader />
-      {!isLoading && <GamesList games={games} readOnly={true} />}
+      {!isLoading && (
+        <DragDropContext>
+          <GamesList games={compGames} readOnly={true} />
+        </DragDropContext>
+      )}
     </div>
   );
 };
