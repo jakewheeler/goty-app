@@ -10,6 +10,7 @@ import { useFetchToken } from '../hooks/customHooks';
 import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { DragDropContext } from 'react-beautiful-dnd';
+import { Spin } from 'antd';
 
 const ListSharePage = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +45,9 @@ const ListSharePage = () => {
     <div>
       <PlainHeader />
       <HomeHeader />
-      {!isLoading && (
+      {isLoading ? (
+        <Spin size='large' />
+      ) : (
         <DragDropContext>
           <GamesList games={compGames} readOnly={true} />
         </DragDropContext>

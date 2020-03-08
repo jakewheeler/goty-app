@@ -55,3 +55,22 @@ export const useFetchToken = () => {
 
   return token;
 };
+
+export const useUserContext = () => {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    let mounted = true;
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user && mounted) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+
+    return () => (mounted = false);
+  }, [setUser]);
+
+  return user;
+};

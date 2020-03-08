@@ -9,6 +9,7 @@ import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
 import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import ShareButton from './ShareButton';
 
 const GRID = 8;
 
@@ -142,6 +143,7 @@ const GameListEditor = ({ user }) => {
           >
             Save list
           </Button>
+          <ShareButton />
           <DragDropContext onDragEnd={onDragEnd}>
             <GamesList
               games={games}
