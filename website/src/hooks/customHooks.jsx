@@ -26,7 +26,8 @@ export const useFetchToken = () => {
 
   useEffect(() => {
     async function fetchUser() {
-      const fbUser = await firebase.auth().currentUser;
+      const fbUser = firebase.auth().currentUser;
+      console.log(fbUser);
       setUser(fbUser);
     }
     fetchUser();

@@ -1,5 +1,5 @@
 import React from 'react';
-import DraggableArea from './GamesList';
+import GameListEditor from './GamesList';
 import Header from './Header';
 import HomePage from './HomePage';
 import { FirebaseAuthConsumer } from '@react-firebase/auth';
@@ -27,7 +27,7 @@ const App = () => {
                 {({ user }) => <GameDetailPage user={user} />}
               </FirebaseAuthConsumer>
             </Route>
-            <Route path='/share/:key/:year'>
+            <Route path='/share/:uid/:year'>
               <FirebaseAuthConsumer>
                 {({ user }) => <ListSharePage user={user} />}
               </FirebaseAuthConsumer>
@@ -45,9 +45,9 @@ const App = () => {
 const UserContent = () => {
   return (
     <FirebaseAuthConsumer>
-      {({ isSignedIn }) => {
+      {({ isSignedIn, user }) => {
         if (isSignedIn === true) {
-          return <DraggableArea />;
+          return <GameListEditor user={user}/>;
         } else {
           return <HomePage />;
         }

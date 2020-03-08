@@ -4,7 +4,6 @@ import { Button, Spin } from 'antd';
 import { Card } from 'antd';
 import { useEffect } from 'react';
 import axios from 'axios';
-import { FirebaseAuthConsumer } from '@react-firebase/auth';
 import { useState } from 'react';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
@@ -36,33 +35,19 @@ const reorder = (list, startIndex, endIndex) => {
   return result;
 };
 
-const DraggableArea = ({ isEditable = true }) => {
-  const {
-    gameListState: [games, setGames]
-  } = useGameListState();
-
-  const onDragEnd = result => {
-    if (!result.destination) {
-      return;
-    }
-
-    const items = reorder(games, result.source.index, result.destination.index);
-
-    setGames(items);
-  };
-
+const renderGame = (game, index, readOnly) => {
   return (
-    <>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <FirebaseAuthConsumer>
-          {({ user }) => <GamesList user={user} isEditable={isEditable} />}
-        </FirebaseAuthConsumer>
-      </DragDropContext>
-    </>
+    <DraggableGame
+      key={game.id}
+      index={index}
+      id={game.id}
+      gameObj={game}
+      readOnly={readOnly}
+    />
   );
 };
 
-const GamesList = ({ user, isEditable }) => {
+const GameListEditor = ({ user }) => {
   const [disableBtn, setDisableBtn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const { uid } = user;
@@ -115,20 +100,20 @@ const GamesList = ({ user, isEditable }) => {
   useEffect(() => {
     setDisableBtn(false); // enable on change
   }, [games]);
-  // console.log(isEditable);
-  const renderGame = (game, index) => {
-    return (
-      <DraggableGame
-        key={game.id}
-        index={index}
-        id={game.id}
-        gameObj={game}
-        disableDrag={!isEditable}
-      />
-    );
+
+  const onDragEnd = result => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(games, result.source.index, result.destination.index);
+
+    setGames(items);
   };
 
-  if (games.length <= 0 && disableBtn) {
+  const disabled = games.length <= 0 && disableBtn;
+
+  if (disabled) {
     return (
       <div className='empty-list'>
         <h2>
@@ -157,31 +142,47 @@ const GamesList = ({ user, isEditable }) => {
           >
             Save list
           </Button>
-          <Droppable droppableId='droppable'>
-            {(provided, snapshot) => (
-              <div
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-                style={getListStyle(snapshot.isDraggingOver)}
-              >
-                {games.map((item, index) => renderGame(item, index))}
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+          <DragDropContext onDragEnd={onDragEnd}>
+            <GamesList
+              games={games}
+              readOnly={false}
+              disableList={disableBtn}
+            />
+          </DragDropContext>
         </div>
       )}
     </>
   );
 };
 
-const DraggableGame = ({ id, gameObj, index, disableDrag }) => {
+export const GamesList = ({ games, readOnly = true }) => {
+  return (
+    <>
+      <div>
+        <Droppable droppableId='droppable'>
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              style={getListStyle(snapshot.isDraggingOver)}
+            >
+              {games.map((item, index) => renderGame(item, index, readOnly))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </div>
+    </>
+  );
+};
+
+const DraggableGame = ({ id, gameObj, index, readOnly }) => {
   return (
     <Draggable
       key={id}
       draggableId={id.toString()}
       index={index}
-      isDragDisabled={disableDrag}
+      isDragDisabled={readOnly}
     >
       {(provided, snapshot) => (
         <div
@@ -198,7 +199,7 @@ const DraggableGame = ({ id, gameObj, index, disableDrag }) => {
               <div className='game-info'>
                 <Link to={`/game/${gameObj.id}`}>{gameObj.name}</Link>
               </div>
-              {!disableDrag && (
+              {!readOnly && (
                 <div className='remove-btn'>
                   <GameCardButton game={gameObj} />
                 </div>
@@ -277,4 +278,4 @@ const GameCardButton = ({ game }) => {
   );
 };
 
-export default DraggableArea;
+export default GameListEditor;
