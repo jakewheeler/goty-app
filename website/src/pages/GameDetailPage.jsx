@@ -91,11 +91,11 @@ const GameInformation = ({ game }) => {
         <div className='game-detail'>
           <img
             src={data?.image?.original_url}
-            width='50%'
-            height='50%'
+            width='300px'
+            height='400px'
             alt={`${game?.name} art`}
           />
-          <p>{data?.deck}</p>
+          <p style={{ paddingTop: '1rem', maxWidth: '500px' }}>{data?.deck}</p>
           <div>
             Platforms:
             <ul>

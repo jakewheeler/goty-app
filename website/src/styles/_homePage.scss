@@ -1,3 +1,7 @@
+// html,
+// body {
+//   background-color: $header-background-color !important;
+// }
 .home-page {
   display: flex;
   justify-content: center;
@@ -9,6 +13,10 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  .home-title {
+    color: white;
   }
 
   .current-year-games {
