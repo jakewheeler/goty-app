@@ -59,7 +59,6 @@ router.get(
 
       const gameList: Object[] = [];
       list.forEach(x => gameList.push(x.data()));
-      console.log(gameList);
       const [sortedList] = gameList;
       return res.status(200).send(sortedList);
     } catch (err) {

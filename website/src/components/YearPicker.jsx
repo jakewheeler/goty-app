@@ -36,7 +36,7 @@ const YearPicker = ({ user }) => {
   return (
     <>
       <Select
-        defaultValue={new Date().getFullYear()}
+        defaultValue={currentYear || new Date().getFullYear()}
         style={{ width: 120 }}
         onChange={handleChange}
       >

@@ -6,7 +6,6 @@ import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import { PlainHeader } from '../components/Header';
-import { useGameListState } from '../contexts/GamesListContext';
 
 export const GameDetailPage = user => {
   const { gameId } = useParams();
@@ -51,13 +50,9 @@ export const GameDetailPage = user => {
 
 const Header = ({ gameTitle }) => {
   const history = useHistory();
-  const {
-    yearState: [, setCurrentYear]
-  } = useGameListState();
 
   function goBack() {
-    history.push('/');
-    setCurrentYear(new Date().getFullYear().toString());
+    history.goBack();
   }
   return (
     <PageHeader
@@ -96,8 +91,8 @@ const GameInformation = ({ game }) => {
         <div className='game-detail'>
           <img
             src={data?.image?.original_url}
-            width='200px'
-            height='200px'
+            width='50%'
+            height='50%'
             alt={`${game?.name} art`}
           />
           <p>{data?.deck}</p>

@@ -64,6 +64,7 @@ export const useUserContext = () => {
   useEffect(() => {
     let subscribed = true;
     firebase.auth().onAuthStateChanged(function(user) {
+      if (!user) return;
       if (user && subscribed) {
         setUser(user);
       } else if (subscribed) {
