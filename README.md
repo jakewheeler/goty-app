@@ -9,15 +9,15 @@ My_GOTY is a web application to help you create lists of your favorite games fro
 - Google logins
 - Search for games
 - Create game lists
+- Sharing game lists with friends
+- Lists with content are highlighted in the year dropdown
 - Drag and drop game list ordering
 - Saving game lists
-- Year selection
+- Selecting games by year
 - Individual game detail pages
 
 ## Planned Features
 
-- Sharing lists with friends
-- Lists with content are highlighted in dropdown
 - "All time" game list
 
 ## Planned Updates
@@ -26,6 +26,7 @@ My_GOTY is a web application to help you create lists of your favorite games fro
   - Success / warning / error messages
 - Better color palette
 - More detailed home page
+- Better loading
 
 ## Tools Used
 
