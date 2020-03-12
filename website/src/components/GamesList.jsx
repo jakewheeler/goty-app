@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import axios from 'axios';
 import { useState } from 'react';
 import { getRequestConfig } from '../helpers/getRequestJwt';
-import { useFetchToken } from '../hooks/customHooks';
+import { useFetchToken, useUserContext } from '../hooks/customHooks';
 import { Link } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import ShareButton from './ShareButton';
@@ -48,18 +48,24 @@ const renderGame = (game, index, readOnly) => {
   );
 };
 
-const GameListEditor = ({ user }) => {
+const GameListEditor = () => {
   const [disableBtn, setDisableBtn] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
-  const { uid } = user;
+  const [saveKey, setSaveKey] = useState(null);
   const {
     gameListState: [games, setGames],
     yearState: [currentYear],
     yearListState: [, setYears]
   } = useGameListState();
 
-  const saveKey = `${uid}_${currentYear}`;
   const token = useFetchToken();
+  const user = useUserContext();
+
+  useEffect(() => {
+    if (user) {
+      setSaveKey(`${user.uid}_${currentYear}`);
+    }
+  }, [user, currentYear, setSaveKey]);
 
   async function saveListHandler() {
     setDisableBtn(true); // disable button
@@ -72,7 +78,7 @@ const GameListEditor = ({ user }) => {
       getRequestConfig(token)
     );
 
-    const yearData = await getYearData(token, uid);
+    const yearData = await getYearData(token, user.uid);
     setYears([...yearData]);
   }
 

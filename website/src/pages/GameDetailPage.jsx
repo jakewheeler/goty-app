@@ -6,24 +6,23 @@ import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useState, useEffect } from 'react';
 import { Spin } from 'antd';
 import { PlainHeader } from '../components/Header';
+import { useFetchToken } from '../hooks/customHooks';
 
-export const GameDetailPage = user => {
+export const GameDetailPage = () => {
   const { gameId } = useParams();
-  const [token, setToken] = useState(null);
   const [game, setGame] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
-    setToken(user);
-  }, [user]);
+  let token = useFetchToken();
 
   useEffect(() => {
     async function getGame() {
-      if (!token?.user?.ma) return;
-      setIsLoading(true);
       try {
-        let gameData = await fetchGameInfo(gameId, token.user.ma);
-        setGame(gameData);
+        if (token) {
+          setIsLoading(true);
+          let gameData = await fetchGameInfo(gameId, token);
+          setGame(gameData);
+        }
       } catch (err) {
         console.error('no token');
       } finally {

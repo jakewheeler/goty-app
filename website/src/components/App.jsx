@@ -42,7 +42,7 @@ const HomeView = () => {
     <>
       <Header />
       <IfFirebaseAuthed>
-        {({ user }) => <GameListEditor user={user} />}
+        <GameListEditor />
       </IfFirebaseAuthed>
       <IfFirebaseUnAuthed>
         <HomePage />
@@ -55,7 +55,7 @@ const GameView = () => {
   return (
     <>
       <IfFirebaseAuthed>
-        {({ user }) => <GameDetailPage user={user} />}
+        <GameDetailPage />
       </IfFirebaseAuthed>
       <IfFirebaseUnAuthed>
         <NoMatch />
@@ -68,7 +68,7 @@ const ShareView = () => {
   return (
     <>
       <IfFirebaseAuthed>
-        {({ user }) => <ListSharePage user={user} />}
+        <ListSharePage />
       </IfFirebaseAuthed>
       <IfFirebaseUnAuthed>
         <NoMatch />
