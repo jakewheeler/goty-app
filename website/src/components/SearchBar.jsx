@@ -4,6 +4,7 @@ import { Input } from 'antd';
 import { Spin } from 'antd';
 import { List } from 'antd';
 import { Button } from 'antd';
+import { CaretUpOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
@@ -58,19 +59,17 @@ const GoToTop = ({ isVisible }) => {
     window.scrollTo(0, 0);
   };
 
-  console.log(isVisible);
-
   return (
     <>
       {isVisible && (
         <Button
-          style={{ zIndex: 1, position: 'fixed', right: 20, bottom: 20 }}
+          style={{ zIndex: 2, position: 'fixed', right: 20, bottom: 20 }}
           type='primary'
           shape='circle'
           size='large'
           onClick={scrollToTop}
         >
-          ^
+          <CaretUpOutlined />
         </Button>
       )}
     </>
@@ -108,11 +107,18 @@ const SearchResults = ({ isSearching, searchResults }) => {
   if (!searchResults?.length || !isSearching) return <div></div>;
 
   return (
-    <div className='list-container' style={{ position: 'relative' }}>
+    <div className='list-container' style={{ position: 'relative', zIndex: 1 }}>
       <div className='scroll-icon'>
         <GoToTop isVisible={isScrolling} />
       </div>
-      <div className='list-parent'>
+      <div
+        className='list-parent'
+        style={{
+          position: 'absolute',
+          width: '100%',
+          backgroundColor: 'black'
+        }}
+      >
         <List
           className='search-results'
           itemLayout='horizontal'
