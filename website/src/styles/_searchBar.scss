@@ -5,3 +5,14 @@
     margin-left: 2rem;
   }
 }
+
+.list-container {
+  position: relative;
+  z-index: 1;
+}
+
+.list-parent {
+  position: absolute;
+  width: 100%;
+  background-color: $header-background-color;
+}

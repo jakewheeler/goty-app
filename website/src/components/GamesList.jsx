@@ -233,7 +233,11 @@ const DraggableGame = ({ id, gameObj, index, readOnly }) => {
 export const GameCard = ({ game }) => {
   return (
     <>
-      <Card title={game.name} style={{ width: '100%', height: 250 }}>
+      <Card
+        title={game.name}
+        bordered={false}
+        style={{ width: '100%', height: 250 }}
+      >
         <figure className='image is-64x64'>
           <img src={game.image.icon_url} alt={game.name} />
         </figure>

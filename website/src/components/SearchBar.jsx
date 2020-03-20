@@ -107,24 +107,18 @@ const SearchResults = ({ isSearching, searchResults }) => {
   if (!searchResults?.length || !isSearching) return <div></div>;
 
   return (
-    <div className='list-container' style={{ position: 'relative', zIndex: 1 }}>
+    <div className='list-container'>
       <div className='scroll-icon'>
         <GoToTop isVisible={isScrolling} />
       </div>
-      <div
-        className='list-parent'
-        style={{
-          position: 'absolute',
-          width: '100%',
-          backgroundColor: 'black'
-        }}
-      >
+      <div className='list-parent'>
         <List
           className='search-results'
           itemLayout='horizontal'
           dataSource={searchResults}
+          bordered={false}
           renderItem={game => (
-            <List.Item key={game.id} className='search-item'>
+            <List.Item key={game.id} style={{ borderBottom: 'none' }}>
               <GameCard game={game} />
             </List.Item>
           )}
