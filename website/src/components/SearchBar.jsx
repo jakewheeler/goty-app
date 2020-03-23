@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { GameCard } from './GamesList';
-import { Input } from 'antd';
-import { Spin } from 'antd';
-import { List } from 'antd';
-import { Button } from 'antd';
+import { Input, Spin, List, Button } from 'antd';
 import { CaretUpOutlined } from '@ant-design/icons';
 import axios from 'axios';
 import { getRequestConfig } from '../helpers/getRequestJwt';
 import { useFetchToken } from '../hooks/customHooks';
 import { useGameListState } from '../contexts/GamesListContext';
-import { useEffect } from 'react';
 
 const SearchBar = () => {
   const [isSearching, setIsSearching] = useState(false);
@@ -20,7 +16,7 @@ const SearchBar = () => {
   } = useGameListState();
   const token = useFetchToken();
 
-  async function onEnterKeyPress(e) {
+  async function searchForGame(e) {
     const text = e.target.value;
     setIsLoading(false);
     setIsSearching(false);
@@ -40,7 +36,7 @@ const SearchBar = () => {
     <div className='search-container'>
       <Input
         placeholder='Find a game..'
-        onKeyDown={async e => onEnterKeyPress(e)}
+        onKeyDown={async e => searchForGame(e)}
       />
       {isLoading ? (
         <Spin size='large' style={{ marginTop: '.5rem' }} />
